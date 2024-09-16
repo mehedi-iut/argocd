@@ -1,0 +1,51 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: golang-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mehedi-iut/argocd_test.git
+    targetRevision: HEAD
+    path: manifests
+  destination:
+    server: https://kubernetes.default.svc
+    # namespace: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+      allowEmpty: false
+    syncOptions:
+      - Validate=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      # - ApplyOutOfSyncOnly=true
+      # - PruneLastAppliedResources=true
+  # ignoreDifferences:
+  #   - group: apps
+  #     kind: Deployment
+  #     name: nginx-deployment
+  #     jsonPointers:
+  #       - /spec/template/spec/containers/0/image
+  # sync:
+  #   revision: HEAD
+  #   prune: true
+  #   syncOptions:
+  #     - CreateNamespace=true
+  #     - ApplyOutOfSyncOnly=true
+  #     - PruneLastAppliedResources=true
+  # health:
+  #   liveness:
+  #     type: "http"
+  #     path: /
+  #     port: 80
+  #     initialDelaySeconds: 10
+  #     timeoutSeconds: 5
+  #     periodSeconds: 10
+  #     failureThreshold: 3
+  #     successThreshold: 1
