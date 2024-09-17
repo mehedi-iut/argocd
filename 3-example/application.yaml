@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/mehedi-iut/simple-go-app.git
     targetRevision: HEAD
-    path: manifests
+    path: gitops/environment/staging/apps
   destination:
     server: https://kubernetes.default.svc
     # namespace: default

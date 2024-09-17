@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: golang-app
+  namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: mehedi02/simple-go-server:~v0.1
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mehedi-iut/simple-go-app.git
+    targetRevision: HEAD
+    path: gitops/environment/staging/kustomize
+  destination:
+    server: https://kubernetes.default.svc
+    # namespace: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+      allowEmpty: false
+    syncOptions:
+      - Validate=true
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
